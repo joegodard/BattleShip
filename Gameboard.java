@@ -26,11 +26,16 @@ public class Gameboard{
   //Returns a string representation of the board
   public String toString(){
     //The string to be returned
-    String s = "";
+    String s = " ";
+
+    for(int col = 0; col<board[0].length; col++){
+      s += " " + col;
+    }
+    s += "\n";
     //Loops through each row
     for(int row = 0; row<board.length; row++){
       //Grabs each row and adds to the string
-      s += this.getRow(row) + "\n";
+      s += row + this.getRow(row) + "\n";
     }
     //Returns the string
     return s;
@@ -43,7 +48,7 @@ public class Gameboard{
     //Loops through each column
     for(int col = 0; col<board[rowNum].length; col++){
       //Adds the display character to the string
-      row += board[rowNum][col].getDisplay(isOpponent); 
+      row += " " + board[rowNum][col].getDisplay(isOpponent); 
     }
     //Returns the string
     return row;
@@ -153,7 +158,7 @@ public class Gameboard{
         canPlace = false;
       }
       //Makes sure the starting position is greater than 0
-      if(start >= 0){
+      if(canPlace && start >= 0){
         //Loops through the array
         for(int i = 0; i<length; i++){
           //Checks if the ship can be placed on each tile

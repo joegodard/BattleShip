@@ -7,14 +7,17 @@ public class Game{
   //Stores the height and width of the boards
   private int height;
   private int width;
+
+  private int numPlayers;
+  private int numShips;
   
   //Constructor method
-  public Game(int height, int width, int numPlayers){
+  public Game(int height, int width, int numPlayers, int numShips){
     //Creates an array of gameboards with one for each player
     boards = new Gameboard[numPlayers];
     //Loops through the array
     for(int i = 0; i<boards.length; i++){
-      //If it is the first board in the array (the player's board, isOpponent is set to false
+      //If it is the first board in the array (the player's board), isOpponent is set to false
       if(i == 0)
         boards[i] = new Gameboard(height, width, false);
       //If it is anyone else's board, isOpponent is set to true
@@ -26,6 +29,8 @@ public class Game{
     //Sets the height and width of the boards
     this.height = height;
     this.width = width;
+    this.numPlayers = numPlayers;
+    this.numShips = numShips;
   }
   
   //Method to choose a random integer
@@ -61,6 +66,38 @@ public class Game{
   public void addShip(int player, int row, int col, int length, int direction, char letter){
     boards[player].addShip(row, col, length, direction, letter);
   }
+
+  private Gameboard randomBoard(boolean isOpponent){
+    Gameboard board = new Gameboard(height, width, isOpponent);
+    int shipsLeft = numShips;
+    while(shipsLeft > 0){
+      char shipName = (char)('A' + (numShips - shipsLeft));
+      int shipLength = 0;
+      if(shipsLeft >= 4)
+        shipLength = 5;
+      else
+        shipLength = shipsLeft+1;
+      int row = random(height);
+      int col = random(width);
+      int direction = random(4);
+      while(!board.addShip(row, col, shipLength, direction, shipName)){
+        row = random(height);
+        col = random(width);
+        direction = random(4);
+      }
+      shipsLeft--;
+    }
+    return board;
+  }
+
+  public void setupBoards(boolean randomizePlayer){
+    if(randomizePlayer){
+      boards[0] = randomBoard(false);
+    }
+    for(int i = 1; i < numPlayers; i++){
+      boards[i] = randomBoard(true);
+    }
+  }
   
   //Begins the game
   public void playGame(){
@@ -70,7 +107,16 @@ public class Game{
       if(turn == 0){
         //Print out all of the boards
         for(int i = 0; i<boards.length; i++){
-          System.out.println(boards[i]); 
+          if(i == 0){
+            System.out.println("Your Board");
+          }
+          else{
+            System.out.println("Player " + i + "'s Board:");
+          }
+          if(!boards[i].hasLost())
+            System.out.println(boards[i]);
+          else
+            System.out.println("Player " + i + " has no more ships!");
         }
         //Create a new scanner
         Scanner kbd = new Scanner(System.in);
@@ -94,7 +140,7 @@ public class Game{
           System.out.println("Invalid input"); 
         }
       }
-      //If it is a computer's opponent
+      //If it is the computer's turn
       else{
         //Randomly attack
         randomAttack();
