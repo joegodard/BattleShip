@@ -8,3 +8,6 @@ The user and computer players then take turns attacking a square on one of the o
 The opponent's boards are obscured to the player, however if they get a hit a `*` will appear, and if it is a miss a `^` will appear.     
 To win, the player must sink all of the other opponents' ships.
 
+# Example Board Display:
+![Board Display](https://github.com/joegodard/BattleShip/blob/main/Images/BoardDisplay.png?raw=true)
+
